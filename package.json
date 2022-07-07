@@ -1,0 +1,35 @@
+{
+  "name": "robokit-command-system",
+  "version": "0.0.1",
+  "description": "A system for managing romote commands for Robokit applications/skills",
+  "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
+  "scripts": {
+    "build": "npm run clean && tsc",
+    "test": "jest",
+    "clean": "shx rm -rf lib dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com:wwlib/robokit-command-system.git"
+  },
+  "dependencies": {
+    "jest": "^27.5.1",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "@types/node": "^9.4.6",
+    "@types/uuid": "^8.3.4",
+    "shx": "^0.3.2",
+    "typescript": "^3.8.3"
+  },
+  "keywords": [
+    "robokit,robot,command,system,remote,control"
+  ],
+  "author": "Andrew Rapo <andrew@wwlib.org> (http://wwlib.org/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/wwlib/robokit-command-system/issues"
+  },
+  "homepage": "https://github.com/wwlib/robokit-command-system#readme"
+}
