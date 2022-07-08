@@ -21,7 +21,11 @@ export enum RCSCommandStatus {
 export enum RCSCommandName {
     play = 'play',
     syncOffset = 'syncOffset',
-    notification = 'notification'
+    notification = 'notification',
+    asrSOS = 'asrSOS',
+    asrEOS = 'asrEOS',
+    asrResult = 'asrResult',
+    asrEnded = 'asrEnded',
 }
 
 export enum RCSHubCommandName {
@@ -35,11 +39,11 @@ export interface RCSCommand {
     targetAccountId: string // accountId of targeted device/app
     type: RCSCommandType
     message?: string
-    name?: RCSCommandName | RCSHubCommandName
+    name: RCSCommandName | RCSHubCommandName | string // added string to allow flexibility during development
     status?: RCSCommandStatus
     payload?: any
     createdAtTime: number
-    ackReceivedAtTime: number
+    ackReceivedAtTime?: number
 }
 
 export interface RCSCommandAck {
@@ -70,11 +74,12 @@ export default class CommandFactory extends EventEmitter {
         return CommandFactory._instance
     }
 
-    createCommand = ((data: any, targetAccountId: string): RCSCommand => {
+    createCommand = ((data: any, targetAccountId: string, registerCommand: boolean = true): RCSCommand => {
         const command: RCSCommand = {
             id: uuidv4(),
             targetAccountId,
             type: data.type,
+            name: 'tbd',
             createdAtTime: new Date().getTime(),
             ackReceivedAtTime: 0,
         }
@@ -85,12 +90,13 @@ export default class CommandFactory extends EventEmitter {
                 command.payload = data.payload || {}
                 break;
         }
-
-        this._pendingCommandMap.set(command.id, command)
+        if (registerCommand) {
+            this._pendingCommandMap.set(command.id, command)
+        }
         return command
     })
 
-    createPlayPromptCommand(prompt: string, targetAccountId: string): RCSCommand {
+    createPlayPromptCommand(prompt: string, targetAccountId: string, registerCommand: boolean = true): RCSCommand {
         const data = {
             type: RCSCommandType.command,
             name: RCSCommandName.play,
@@ -98,10 +104,10 @@ export default class CommandFactory extends EventEmitter {
                 prompt: prompt,
             }
         }
-        return this.createCommand(data, targetAccountId)
+        return this.createCommand(data, targetAccountId, registerCommand)
     }
 
-    createPlayMidiNoteCommand(note: number, channel: number, startAtTime: number, targetAccountId: string): RCSCommand {
+    createPlayMidiNoteCommand(note: number, channel: number, startAtTime: number, targetAccountId: string, registerCommand: boolean = true): RCSCommand {
         const data = {
             type: RCSCommandType.command,
             name: RCSCommandName.play,
@@ -113,7 +119,7 @@ export default class CommandFactory extends EventEmitter {
                 }
             }
         }
-        return this.createCommand(data, targetAccountId)
+        return this.createCommand(data, targetAccountId, registerCommand)
     }
 
     getPendingCommandWithId(id: string): RCSCommand | undefined {

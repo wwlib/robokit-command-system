@@ -17,7 +17,11 @@ export declare enum RCSCommandStatus {
 export declare enum RCSCommandName {
     play = "play",
     syncOffset = "syncOffset",
-    notification = "notification"
+    notification = "notification",
+    asrSOS = "asrSOS",
+    asrEOS = "asrEOS",
+    asrResult = "asrResult",
+    asrEnded = "asrEnded"
 }
 export declare enum RCSHubCommandName {
     subscribe = "subscribe",
@@ -29,11 +33,11 @@ export interface RCSCommand {
     targetAccountId: string;
     type: RCSCommandType;
     message?: string;
-    name?: RCSCommandName | RCSHubCommandName;
+    name: RCSCommandName | RCSHubCommandName | string;
     status?: RCSCommandStatus;
     payload?: any;
     createdAtTime: number;
-    ackReceivedAtTime: number;
+    ackReceivedAtTime?: number;
 }
 export interface RCSCommandAck {
     id: string;
@@ -49,9 +53,9 @@ export default class CommandFactory extends EventEmitter {
     private _pendingCommandMap;
     private constructor();
     static getInstance(): CommandFactory;
-    createCommand: (data: any, targetAccountId: string) => RCSCommand;
-    createPlayPromptCommand(prompt: string, targetAccountId: string): RCSCommand;
-    createPlayMidiNoteCommand(note: number, channel: number, startAtTime: number, targetAccountId: string): RCSCommand;
+    createCommand: (data: any, targetAccountId: string, registerCommand?: boolean) => RCSCommand;
+    createPlayPromptCommand(prompt: string, targetAccountId: string, registerCommand?: boolean): RCSCommand;
+    createPlayMidiNoteCommand(note: number, channel: number, startAtTime: number, targetAccountId: string, registerCommand?: boolean): RCSCommand;
     getPendingCommandWithId(id: string): RCSCommand | undefined;
     onCommandAck(ack: RCSCommandAck): void;
 }
