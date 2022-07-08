@@ -31,7 +31,7 @@ export default class SynchronizedClock extends EventEmitter {
     }
 
     get synchronizedTime(): number {
-        return this.localTime - this._syncOffset
+        return this.localTime + this._syncOffset
     }
 
     get lastSynchOffsetAtTime(): number {

@@ -12,5 +12,5 @@ test('SynchronizedClock returns synchronized time', () => {
     const offset = 25
     clock.onSyncOffsetChanged(offset)
     const localTime = new Date().getTime()
-    expect(clock.synchronizedTime).toEqual(localTime - offset)
+    expect(clock.synchronizedTime).toEqual(localTime + offset)
 });
