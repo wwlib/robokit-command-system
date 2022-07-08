@@ -6,7 +6,8 @@ export declare enum RCSCommandType {
     hubCommand = "hubCommand",
     event = "event",
     ack = "ack",
-    sync = "sync"
+    sync = "sync",
+    notification = "notification"
 }
 export declare enum RCSCommandStatus {
     OK = "OK",
@@ -15,10 +16,13 @@ export declare enum RCSCommandStatus {
 }
 export declare enum RCSCommandName {
     play = "play",
-    syncOffset = "syncOffset"
+    syncOffset = "syncOffset",
+    notification = "notification"
 }
 export declare enum RCSHubCommandName {
-    play = "subscribe"
+    subscribe = "subscribe",
+    unsubscribe = "unsubscribe",
+    stats = "stats"
 }
 export interface RCSCommand {
     id: string;

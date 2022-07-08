@@ -9,6 +9,7 @@ export enum RCSCommandType {
     event = 'event',
     ack = 'ack',
     sync = 'sync',
+    notification = 'notification',
 }
 
 export enum RCSCommandStatus {
@@ -20,10 +21,13 @@ export enum RCSCommandStatus {
 export enum RCSCommandName {
     play = 'play',
     syncOffset = 'syncOffset',
+    notification = 'notification'
 }
 
 export enum RCSHubCommandName {
-    play = 'subscribe'
+    subscribe = 'subscribe',
+    unsubscribe = 'unsubscribe',
+    stats = 'stats',
 }
 
 export interface RCSCommand {
