@@ -107,7 +107,7 @@ export default class CommandFactory extends EventEmitter {
         return this.createCommand(data, targetAccountId, registerCommand)
     }
 
-    createPlayMidiNoteCommand(note: number, channel: number, startAtTime: number, targetAccountId: string, registerCommand: boolean = true): RCSCommand {
+    createPlayMidiNoteCommand(note: number, channel: number, volume: number, startAtTime: number, targetAccountId: string, registerCommand: boolean = true): RCSCommand {
         const data = {
             type: RCSCommandType.command,
             name: RCSCommandName.play,
@@ -115,6 +115,22 @@ export default class CommandFactory extends EventEmitter {
                 midi: {
                     note,
                     channel,
+                    volume,
+                    startAtTime
+                }
+            }
+        }
+        return this.createCommand(data, targetAccountId, registerCommand)
+    }
+
+    createPlayMidiFileCommand(filename: string, channelsToPlay: number[] | undefined, startAtTime: number, targetAccountId: string, registerCommand: boolean = true): RCSCommand {
+        const data = {
+            type: RCSCommandType.command,
+            name: RCSCommandName.play,
+            payload: {
+                midi: {
+                    filename,
+                    channelsToPlay,
                     startAtTime
                 }
             }
