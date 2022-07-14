@@ -1,6 +1,6 @@
 import { RCSCommand, RCSCommandStatus } from '../factory'
 
-export type CommandExecutorCallback = (command: RCSCommand, status: RCSCommandStatus, message?: string) => void
+export type CommandExecutorCallback = (command: RCSCommand, status: RCSCommandStatus, completedAtTime: number, message?: string) => void
 
 export default abstract class ICommandExecutor {
 

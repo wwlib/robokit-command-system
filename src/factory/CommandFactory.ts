@@ -1,7 +1,6 @@
 import { EventEmitter } from 'events';
 import { v4 as uuidv4 } from 'uuid';
 
-
 export enum RCSCommandType {
     message = 'message',
     command = 'command',
@@ -43,6 +42,7 @@ export interface RCSCommand {
     status?: RCSCommandStatus
     payload?: any
     createdAtTime: number
+    processedAtTime?: number
     ackReceivedAtTime?: number
 }
 
@@ -51,8 +51,9 @@ export interface RCSCommandAck {
     targetAccountId: string // accountId of targeted device/app
     type: RCSCommandType.ack
     status: RCSCommandStatus
-    commandStartedAtTime: number
-    commandCompletedAtTime: number
+    createdAtTime: number
+    processedAtTime: number
+    completedAtTime: number
     command?: RCSCommand
     message?: string
 }
@@ -75,13 +76,13 @@ export default class CommandFactory extends EventEmitter {
         return CommandFactory._instance
     }
 
-    createCommand = ((data: any, targetAccountId: string, registerCommand: boolean = true): RCSCommand => {
+    createCommand = ((data: any, targetAccountId: string, createdAtTime?: number, registerCommand: boolean = true): RCSCommand => {
         const command: RCSCommand = {
             id: uuidv4(),
             targetAccountId,
             type: data.type,
             name: 'tbd',
-            createdAtTime: new Date().getTime(),
+            createdAtTime: createdAtTime || new Date().getTime(),
             ackReceivedAtTime: 0,
         }
 
@@ -97,7 +98,7 @@ export default class CommandFactory extends EventEmitter {
         return command
     })
 
-    createPlayPromptCommand(prompt: string, targetAccountId: string, registerCommand: boolean = true): RCSCommand {
+    createPlayPromptCommand(prompt: string, targetAccountId: string, createdAtTime?: number, registerCommand: boolean = true): RCSCommand {
         const data = {
             type: RCSCommandType.command,
             name: RCSCommandName.play,
@@ -105,10 +106,10 @@ export default class CommandFactory extends EventEmitter {
                 prompt: prompt,
             }
         }
-        return this.createCommand(data, targetAccountId, registerCommand)
+        return this.createCommand(data, targetAccountId, createdAtTime, registerCommand)
     }
 
-    createPlayMidiNoteCommand(note: number, channel: number, volume: number, startAtTime: number, targetAccountId: string, registerCommand: boolean = true): RCSCommand {
+    createPlayMidiNoteCommand(note: number, channel: number, volume: number, startAtTime: number, targetAccountId: string, createdAtTime?: number, registerCommand: boolean = true): RCSCommand {
         const data = {
             type: RCSCommandType.command,
             name: RCSCommandName.play,
@@ -121,10 +122,10 @@ export default class CommandFactory extends EventEmitter {
                 }
             }
         }
-        return this.createCommand(data, targetAccountId, registerCommand)
+        return this.createCommand(data, targetAccountId, createdAtTime, registerCommand)
     }
 
-    createPlayMidiFileCommand(filename: string, channelsToPlay: number[] | undefined, startAtTime: number, targetAccountId: string, registerCommand: boolean = true): RCSCommand {
+    createPlayMidiFileCommand(filename: string, channelsToPlay: number[] | undefined, startAtTime: number, targetAccountId: string, createdAtTime?: number, registerCommand: boolean = true): RCSCommand {
         const data = {
             type: RCSCommandType.command,
             name: RCSCommandName.play,
@@ -136,23 +137,23 @@ export default class CommandFactory extends EventEmitter {
                 }
             }
         }
-        return this.createCommand(data, targetAccountId, registerCommand)
+        return this.createCommand(data, targetAccountId, createdAtTime, registerCommand)
     }
 
     getPendingCommandWithId(id: string): RCSCommand | undefined {
         return this._pendingCommandMap.get(id)
     }
 
-    onCommandAck(ack: RCSCommandAck) {
-        const command = this.getPendingCommandWithId(ack.id)
-        if (command) {
-            command.ackReceivedAtTime = new Date().getTime()
-            ack.command = command
-            this._pendingCommandMap.delete(ack.id)
-        } else {
-            throw new Error('Ack error. Command not found')
+    deletePendingCommandWithId(id: string): boolean {
+        return this._pendingCommandMap.delete(id)
+    }
+
+    matchPendingCommandWithId(id: string, deletePendingCommand: boolean = true) {
+        const command = this.getPendingCommandWithId(id)
+        if (deletePendingCommand) {
+            this.deletePendingCommandWithId(id)
         }
-        this.emit('commandAck', ack)
+        return command
     }
 }
 

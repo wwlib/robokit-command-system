@@ -52,11 +52,7 @@ test('CommandFactory successfully handles command Ack', () => {
     }
     const command = CommandFactory.getInstance().createCommand(commandData)
     expect(command.name).toBe(RCSCommandName.play)
-    const ack = {
-        id: command.id,
-        status: RCSCommandStatus.OK,
-        commandCompletedAtTime: new Date().getTime()
-    }
-    const ackResult = CommandFactory.getInstance().onCommandAck(ack)
-    expect( CommandFactory.getInstance().getPendingCommandWithId(ack.id)).toBeUndefined
+    const pendingCommand = CommandFactory.getInstance().matchPendingCommandWithId(command.id)
+    expect(pendingCommand).toBeDefined
+    expect(CommandFactory.getInstance().getPendingCommandWithId(command.id)).toBeUndefined
 });

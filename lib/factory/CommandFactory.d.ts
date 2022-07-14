@@ -37,6 +37,7 @@ export interface RCSCommand {
     status?: RCSCommandStatus;
     payload?: any;
     createdAtTime: number;
+    processedAtTime?: number;
     ackReceivedAtTime?: number;
 }
 export interface RCSCommandAck {
@@ -44,8 +45,9 @@ export interface RCSCommandAck {
     targetAccountId: string;
     type: RCSCommandType.ack;
     status: RCSCommandStatus;
-    commandStartedAtTime: number;
-    commandCompletedAtTime: number;
+    createdAtTime: number;
+    processedAtTime: number;
+    completedAtTime: number;
     command?: RCSCommand;
     message?: string;
 }
@@ -54,10 +56,11 @@ export default class CommandFactory extends EventEmitter {
     private _pendingCommandMap;
     private constructor();
     static getInstance(): CommandFactory;
-    createCommand: (data: any, targetAccountId: string, registerCommand?: boolean) => RCSCommand;
-    createPlayPromptCommand(prompt: string, targetAccountId: string, registerCommand?: boolean): RCSCommand;
-    createPlayMidiNoteCommand(note: number, channel: number, volume: number, startAtTime: number, targetAccountId: string, registerCommand?: boolean): RCSCommand;
-    createPlayMidiFileCommand(filename: string, channelsToPlay: number[] | undefined, startAtTime: number, targetAccountId: string, registerCommand?: boolean): RCSCommand;
+    createCommand: (data: any, targetAccountId: string, createdAtTime?: number | undefined, registerCommand?: boolean) => RCSCommand;
+    createPlayPromptCommand(prompt: string, targetAccountId: string, createdAtTime?: number, registerCommand?: boolean): RCSCommand;
+    createPlayMidiNoteCommand(note: number, channel: number, volume: number, startAtTime: number, targetAccountId: string, createdAtTime?: number, registerCommand?: boolean): RCSCommand;
+    createPlayMidiFileCommand(filename: string, channelsToPlay: number[] | undefined, startAtTime: number, targetAccountId: string, createdAtTime?: number, registerCommand?: boolean): RCSCommand;
     getPendingCommandWithId(id: string): RCSCommand | undefined;
-    onCommandAck(ack: RCSCommandAck): void;
+    deletePendingCommandWithId(id: string): boolean;
+    matchPendingCommandWithId(id: string, deletePendingCommand?: boolean): RCSCommand | undefined;
 }
