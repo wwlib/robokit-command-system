@@ -41,6 +41,7 @@ export interface RCSCommand {
 }
 export interface RCSCommandAck {
     id: string;
+    targetAccountId: string;
     type: RCSCommandType.ack;
     status: RCSCommandStatus;
     commandStartedAtTime: number;
@@ -55,7 +56,8 @@ export default class CommandFactory extends EventEmitter {
     static getInstance(): CommandFactory;
     createCommand: (data: any, targetAccountId: string, registerCommand?: boolean) => RCSCommand;
     createPlayPromptCommand(prompt: string, targetAccountId: string, registerCommand?: boolean): RCSCommand;
-    createPlayMidiNoteCommand(note: number, channel: number, startAtTime: number, targetAccountId: string, registerCommand?: boolean): RCSCommand;
+    createPlayMidiNoteCommand(note: number, channel: number, volume: number, startAtTime: number, targetAccountId: string, registerCommand?: boolean): RCSCommand;
+    createPlayMidiFileCommand(filename: string, channelsToPlay: number[] | undefined, startAtTime: number, targetAccountId: string, registerCommand?: boolean): RCSCommand;
     getPendingCommandWithId(id: string): RCSCommand | undefined;
     onCommandAck(ack: RCSCommandAck): void;
 }

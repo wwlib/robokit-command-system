@@ -48,6 +48,7 @@ export interface RCSCommand {
 
 export interface RCSCommandAck {
     id: string
+    targetAccountId: string // accountId of targeted device/app
     type: RCSCommandType.ack
     status: RCSCommandStatus
     commandStartedAtTime: number

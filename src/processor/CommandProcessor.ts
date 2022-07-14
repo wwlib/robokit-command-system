@@ -39,6 +39,7 @@ export default class CommandProcessor extends EventEmitter {
             this._pendingCommandMap.delete(command.id)
             const commandAck: RCSCommandAck = {
                 id: command.id,
+                targetAccountId: command.targetAccountId,
                 type: RCSCommandType.ack,
                 status: status,
                 commandStartedAtTime: commandData ? commandData.startTime : 0,
