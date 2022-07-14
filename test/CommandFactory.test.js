@@ -21,7 +21,7 @@ test('createCommand returns valid command', () => {
             playAtTime: new Date().getTime() + 1000,
         }
     }
-    const command = CommandFactory.getInstance().createCommand(commandData)
+    const command = CommandFactory.getInstance().createCommand(commandData, 'fake-account-id', new Date().getTime())
 
     expect(command).toBeDefined()
     expect(command.name).toBe(RCSCommandName.play)
@@ -29,7 +29,7 @@ test('createCommand returns valid command', () => {
 });
 
 test('createCommand returns valid PLAY command', () => {
-    const command = CommandFactory.getInstance().createPlayPromptCommand('hello, robo.', 'robot_1')
+    const command = CommandFactory.getInstance().createPlayPromptCommand('hello, robo.', 'robot_1', new Date().getTime())
     expect(command).toBeDefined()
     expect(command.name).toBe(RCSCommandName.play)
     expect(command.targetAccountId).toBe('robot_1')

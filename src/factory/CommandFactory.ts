@@ -82,7 +82,7 @@ export default class CommandFactory extends EventEmitter {
             targetAccountId,
             type: data.type,
             name: 'tbd',
-            createdAtTime: createdAtTime || new Date().getTime(),
+            createdAtTime: createdAtTime || 0,
             ackReceivedAtTime: 0,
         }
 

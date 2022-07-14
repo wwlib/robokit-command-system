@@ -15,7 +15,7 @@ test('DefaultCommandExecutor returns unimplemented for invalid command', () => {
         name: 'fake-command',
         payload: {}
     }
-    const command = CommandFactory.getInstance().createCommand(commandData)
+    const command = CommandFactory.getInstance().createCommand(commandData, 'fake-acccount-id', new Date().getTime())
     expect(command).toBeDefined()
     expect(command.name).toBe('fake-command')
     expect(command.createdAtTime).toBeGreaterThan(0)
