@@ -15,6 +15,7 @@ test('CommandExecutor returns unimplemented for invalid command', () => {
     const handler = jest.fn((commandAck) => {
         // console.log('on commandCompleted', commandAck)
         expect(commandAck.status).toBe(RCSCommandStatus.unimplemented)
+        CommandFactory.getInstance().matchPendingCommandWithId(commandAck.id)
         expect(CommandFactory.getInstance().getPendingCommandWithId(commandAck.id)).toBeUndefined()
     });
 
