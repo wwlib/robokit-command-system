@@ -86,7 +86,10 @@ export default class CommandFactory extends EventEmitter {
             source: source,
             targetAccountId,
             type: data.type,
+            message: data.message,
             name: data.name || 'tbd',
+            status: data.status,
+            payload: data.payload,
             createdAtTime: createdAtTime || 0,
             ackReceivedAtTime: 0,
         }
