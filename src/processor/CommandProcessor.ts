@@ -1,20 +1,20 @@
 import { EventEmitter } from 'events';
 import { RCSCommand, RCSCommandStatus, RCSCommandAck, RCSCommandType } from '../factory'
 import DefaultCommandExecutor from '../executor/DefaultCommandExecutor';
-import ICommandExecutor from '../executor/ICommandExecutor';
+import AbstractCommandExecutor from '../executor/AbstractCommandExecutor';
 
 
 export default class CommandProcessor extends EventEmitter {
     private static _instance: CommandProcessor;
 
-    private _commandExecutor: ICommandExecutor
+    private _commandExecutor: AbstractCommandExecutor
 
     private constructor() {
         super()
-        this._commandExecutor = new DefaultCommandExecutor()
+        this._commandExecutor = new DefaultCommandExecutor('DEFAULT_COMMAND_EXECUTOR')
     }
 
-    setCommandExecutor(commandExecutor: ICommandExecutor) {
+    setCommandExecutor(commandExecutor: AbstractCommandExecutor) {
         this._commandExecutor = commandExecutor
     }
 

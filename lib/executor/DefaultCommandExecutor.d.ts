@@ -1,6 +1,5 @@
 import { RCSCommand } from '../factory';
-import ICommandExecutor, { CommandExecutorCallback } from './ICommandExecutor';
-export default class CommandExecutor implements ICommandExecutor {
-    constructor();
+import AbstractCommandExecutor, { CommandExecutorCallback } from './AbstractCommandExecutor';
+export default class CommandExecutor extends AbstractCommandExecutor {
     executeCommand(command: RCSCommand, callback: CommandExecutorCallback): void;
 }

@@ -1,8 +1,8 @@
-import ICommandExecutor, { CommandExecutorCallback } from "./ICommandExecutor";
+import AbstractCommandExecutor, { CommandExecutorCallback } from "./AbstractCommandExecutor";
 import DefaultCommandExecutor from "./DefaultCommandExecutor"
 
 export {
-    ICommandExecutor,
+    AbstractCommandExecutor,
     CommandExecutorCallback,
     DefaultCommandExecutor
 }

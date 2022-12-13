@@ -1,10 +1,7 @@
 import { RCSCommand, RCSCommandName, RCSCommandStatus } from '../factory'
-import ICommandExecutor, { CommandExecutorCallback } from './ICommandExecutor';
+import AbstractCommandExecutor, { CommandExecutorCallback } from './AbstractCommandExecutor';
 
-export default class CommandExecutor implements ICommandExecutor {
-
-    constructor() {
-    }
+export default class CommandExecutor extends AbstractCommandExecutor {
 
     executeCommand(command: RCSCommand, callback: CommandExecutorCallback) {
         // console.log(`CommandExecutor: executeCommand: ${command.name}, ${command.id}`)
