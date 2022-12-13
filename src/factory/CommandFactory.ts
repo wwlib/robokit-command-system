@@ -25,6 +25,8 @@ export enum RCSCommandName {
     asrEOS = 'asrEOS',
     asrResult = 'asrResult',
     asrEnded = 'asrEnded',
+    subscribe = 'subscribe',
+    getBase64Photo = 'getBase64Photo',
 }
 
 export enum RCSHubCommandName {
@@ -84,7 +86,7 @@ export default class CommandFactory extends EventEmitter {
             source: source,
             targetAccountId,
             type: data.type,
-            name: 'tbd',
+            name: data.name || 'tbd',
             createdAtTime: createdAtTime || 0,
             ackReceivedAtTime: 0,
         }
