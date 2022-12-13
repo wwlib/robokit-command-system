@@ -35,6 +35,7 @@ export enum RCSHubCommandName {
 
 export interface RCSCommand {
     id: string
+    source: string
     targetAccountId: string // accountId of targeted device/app
     type: RCSCommandType
     message?: string
@@ -48,6 +49,7 @@ export interface RCSCommand {
 
 export interface RCSCommandAck {
     id: string
+    source: string
     targetAccountId: string // accountId of targeted device/app
     type: RCSCommandType.ack
     status: RCSCommandStatus
@@ -76,9 +78,10 @@ export default class CommandFactory extends EventEmitter {
         return CommandFactory._instance
     }
 
-    createCommand = ((data: any, targetAccountId: string, createdAtTime?: number, registerCommand: boolean = true): RCSCommand => {
+    createCommand = ((data: any, source: string, targetAccountId: string, createdAtTime?: number, registerCommand: boolean = true): RCSCommand => {
         const command: RCSCommand = {
             id: uuidv4(),
+            source: source,
             targetAccountId,
             type: data.type,
             name: 'tbd',
@@ -98,7 +101,7 @@ export default class CommandFactory extends EventEmitter {
         return command
     })
 
-    createPlayPromptCommand(prompt: string, targetAccountId: string, createdAtTime?: number, registerCommand: boolean = true): RCSCommand {
+    createPlayPromptCommand(prompt: string, source: string, targetAccountId: string, createdAtTime?: number, registerCommand: boolean = true): RCSCommand {
         const data = {
             type: RCSCommandType.command,
             name: RCSCommandName.play,
@@ -106,10 +109,10 @@ export default class CommandFactory extends EventEmitter {
                 prompt: prompt,
             }
         }
-        return this.createCommand(data, targetAccountId, createdAtTime, registerCommand)
+        return this.createCommand(data, source, targetAccountId, createdAtTime, registerCommand)
     }
 
-    createPlayMidiNoteCommand(note: number, channel: number, volume: number, startAtTime: number, targetAccountId: string, createdAtTime?: number, registerCommand: boolean = true): RCSCommand {
+    createPlayMidiNoteCommand(note: number, channel: number, volume: number, startAtTime: number, source: string, targetAccountId: string, createdAtTime?: number, registerCommand: boolean = true): RCSCommand {
         const data = {
             type: RCSCommandType.command,
             name: RCSCommandName.play,
@@ -122,10 +125,10 @@ export default class CommandFactory extends EventEmitter {
                 }
             }
         }
-        return this.createCommand(data, targetAccountId, createdAtTime, registerCommand)
+        return this.createCommand(data, source, targetAccountId, createdAtTime, registerCommand)
     }
 
-    createPlayMidiFileCommand(filename: string, channelsToPlay: number[] | undefined, startAtTime: number, targetAccountId: string, createdAtTime?: number, registerCommand: boolean = true): RCSCommand {
+    createPlayMidiFileCommand(filename: string, channelsToPlay: number[] | undefined, startAtTime: number, source: string, targetAccountId: string, createdAtTime?: number, registerCommand: boolean = true): RCSCommand {
         const data = {
             type: RCSCommandType.command,
             name: RCSCommandName.play,
@@ -137,7 +140,7 @@ export default class CommandFactory extends EventEmitter {
                 }
             }
         }
-        return this.createCommand(data, targetAccountId, createdAtTime, registerCommand)
+        return this.createCommand(data, source, targetAccountId, createdAtTime, registerCommand)
     }
 
     getPendingCommandWithId(id: string): RCSCommand | undefined {

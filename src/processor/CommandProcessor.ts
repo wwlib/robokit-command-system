@@ -29,6 +29,7 @@ export default class CommandProcessor extends EventEmitter {
         this._commandExecutor.executeCommand(command, (command: RCSCommand, status: RCSCommandStatus, completedAtTime: number, message?: string) => {
             const commandAck: RCSCommandAck = {
                 id: command.id,
+                source: command.source,
                 targetAccountId: command.targetAccountId,
                 type: RCSCommandType.ack,
                 status: status,
