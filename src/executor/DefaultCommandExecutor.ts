@@ -1,10 +1,7 @@
 import { RCSCommand, RCSCommandName, RCSCommandStatus } from '../factory'
-import ICommandExecutor, { CommandExecutorCallback } from './ICommandExecutor';
+import AbstractCommandExecutor, { CommandExecutorCallback } from './AbstractCommandExecutor';
 
-export default class CommandExecutor implements ICommandExecutor {
-
-    constructor() {
-    }
+export default class CommandExecutor extends AbstractCommandExecutor {
 
     executeCommand(command: RCSCommand, callback: CommandExecutorCallback) {
         // console.log(`CommandExecutor: executeCommand: ${command.name}, ${command.id}`)
@@ -12,11 +9,11 @@ export default class CommandExecutor implements ICommandExecutor {
             case RCSCommandName.play:
                 // mock, temp
                 setTimeout(() => {
-                    callback(command, RCSCommandStatus.OK)
+                    callback(command, RCSCommandStatus.OK, 0)
                 }, 1200)
                 break;
             default:
-                callback(command, RCSCommandStatus.unimplemented, `Command ${command.name} unimplemented.`)
+                callback(command, RCSCommandStatus.unimplemented, 0, `Command ${command.name} unimplemented.`)
                 break;
         }
         

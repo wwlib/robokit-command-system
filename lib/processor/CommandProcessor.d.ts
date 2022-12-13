@@ -1,17 +1,12 @@
 /// <reference types="node" />
 import { EventEmitter } from 'events';
 import { RCSCommand } from '../factory';
-import ICommandExecutor from '../executor/ICommandExecutor';
+import AbstractCommandExecutor from '../executor/AbstractCommandExecutor';
 export default class CommandProcessor extends EventEmitter {
     private static _instance;
-    private _pendingCommandMap;
     private _commandExecutor;
     private constructor();
-    setCommandExecutor(commandExecutor: ICommandExecutor): void;
+    setCommandExecutor(commandExecutor: AbstractCommandExecutor): void;
     static getInstance(): CommandProcessor;
-    getPendingCommandDataWithId(id: string): {
-        startTime: number;
-        command: RCSCommand;
-    } | undefined;
-    processCommand(command: RCSCommand): void;
+    processCommand(command: RCSCommand, processedAtTime?: number): void;
 }

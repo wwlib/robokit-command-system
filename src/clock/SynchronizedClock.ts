@@ -10,7 +10,7 @@ export interface TimeData {
 
 export default class SynchronizedClock extends EventEmitter {
 
-    private _syncOffset: number
+    private _syncOffset: number // milliseconds
     private _receivedLastSynchOffsetAtTime: number
     private _receivedLastSynchOffsetChangeAtTime: number
     private _updateInterval: NodeJS.Timer | undefined
@@ -31,7 +31,7 @@ export default class SynchronizedClock extends EventEmitter {
     }
 
     get synchronizedTime(): number {
-        return this.localTime - this._syncOffset
+        return this.localTime + this._syncOffset
     }
 
     get lastSynchOffsetAtTime(): number {

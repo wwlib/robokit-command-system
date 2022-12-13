@@ -1,22 +1,20 @@
 import { EventEmitter } from 'events';
-import {RCSCommand, RCSCommandStatus, RCSCommandAck, RCSCommandType } from '../factory'
+import { RCSCommand, RCSCommandStatus, RCSCommandAck, RCSCommandType } from '../factory'
 import DefaultCommandExecutor from '../executor/DefaultCommandExecutor';
-import ICommandExecutor from '../executor/ICommandExecutor';
+import AbstractCommandExecutor from '../executor/AbstractCommandExecutor';
 
 
 export default class CommandProcessor extends EventEmitter {
     private static _instance: CommandProcessor;
 
-    private _pendingCommandMap: Map<string, { startTime: number, command: RCSCommand }>
-    private _commandExecutor: ICommandExecutor
+    private _commandExecutor: AbstractCommandExecutor
 
     private constructor() {
         super()
-        this._pendingCommandMap = new Map<string, { startTime: number, command: RCSCommand }>()
-        this._commandExecutor = new DefaultCommandExecutor()
+        this._commandExecutor = new DefaultCommandExecutor('DEFAULT_COMMAND_EXECUTOR')
     }
 
-    setCommandExecutor(commandExecutor: ICommandExecutor) {
+    setCommandExecutor(commandExecutor: AbstractCommandExecutor) {
         this._commandExecutor = commandExecutor
     }
 
@@ -27,22 +25,17 @@ export default class CommandProcessor extends EventEmitter {
         return CommandProcessor._instance
     }
 
-    getPendingCommandDataWithId(id: string): { startTime: number, command: RCSCommand } | undefined {
-        return this._pendingCommandMap.get(id)
-    }
-
-    processCommand(command: RCSCommand) {
-        const startTime = new Date().getTime()
-        this._pendingCommandMap.set(command.id, { startTime, command })
-        this._commandExecutor.executeCommand(command, (command: RCSCommand, status: RCSCommandStatus, message?: string) => {
-            const commandData = this._pendingCommandMap.get(command.id)
-            this._pendingCommandMap.delete(command.id)
+    processCommand(command: RCSCommand, processedAtTime: number = 0) {
+        this._commandExecutor.executeCommand(command, (command: RCSCommand, status: RCSCommandStatus, completedAtTime: number, message?: string) => {
             const commandAck: RCSCommandAck = {
                 id: command.id,
+                source: command.source,
+                targetAccountId: command.targetAccountId,
                 type: RCSCommandType.ack,
                 status: status,
-                commandStartedAtTime: commandData ? commandData.startTime : 0,
-                commandCompletedAtTime: new Date().getTime(),
+                createdAtTime: command.createdAtTime || 0,
+                processedAtTime: processedAtTime,
+                completedAtTime: completedAtTime || 0,
                 message: message,
             }
             this.emit('commandCompleted', commandAck)
