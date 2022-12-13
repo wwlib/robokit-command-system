@@ -30,6 +30,7 @@ export declare enum RCSHubCommandName {
 }
 export interface RCSCommand {
     id: string;
+    source: string;
     targetAccountId: string;
     type: RCSCommandType;
     message?: string;
@@ -42,6 +43,7 @@ export interface RCSCommand {
 }
 export interface RCSCommandAck {
     id: string;
+    source: string;
     targetAccountId: string;
     type: RCSCommandType.ack;
     status: RCSCommandStatus;
@@ -56,10 +58,10 @@ export default class CommandFactory extends EventEmitter {
     private _pendingCommandMap;
     private constructor();
     static getInstance(): CommandFactory;
-    createCommand: (data: any, targetAccountId: string, createdAtTime?: number | undefined, registerCommand?: boolean) => RCSCommand;
-    createPlayPromptCommand(prompt: string, targetAccountId: string, createdAtTime?: number, registerCommand?: boolean): RCSCommand;
-    createPlayMidiNoteCommand(note: number, channel: number, volume: number, startAtTime: number, targetAccountId: string, createdAtTime?: number, registerCommand?: boolean): RCSCommand;
-    createPlayMidiFileCommand(filename: string, channelsToPlay: number[] | undefined, startAtTime: number, targetAccountId: string, createdAtTime?: number, registerCommand?: boolean): RCSCommand;
+    createCommand: (data: any, source: string, targetAccountId: string, createdAtTime?: number | undefined, registerCommand?: boolean) => RCSCommand;
+    createPlayPromptCommand(prompt: string, source: string, targetAccountId: string, createdAtTime?: number, registerCommand?: boolean): RCSCommand;
+    createPlayMidiNoteCommand(note: number, channel: number, volume: number, startAtTime: number, source: string, targetAccountId: string, createdAtTime?: number, registerCommand?: boolean): RCSCommand;
+    createPlayMidiFileCommand(filename: string, channelsToPlay: number[] | undefined, startAtTime: number, source: string, targetAccountId: string, createdAtTime?: number, registerCommand?: boolean): RCSCommand;
     getPendingCommandWithId(id: string): RCSCommand | undefined;
     deletePendingCommandWithId(id: string): boolean;
     matchPendingCommandWithId(id: string, deletePendingCommand?: boolean): RCSCommand | undefined;
