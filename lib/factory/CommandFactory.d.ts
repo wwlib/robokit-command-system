@@ -21,7 +21,7 @@ export declare enum RCSCommandName {
     asrSOS = "asrSOS",
     asrEOS = "asrEOS",
     asrResult = "asrResult",
-    asrEnded = "asrEnded",
+    asrEnd = "asrEnd",
     subscribe = "subscribe",
     getBase64Photo = "getBase64Photo"
 }
